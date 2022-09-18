@@ -39,14 +39,13 @@ const Login = () => {
 				'http://localhost:8910/api/student/login',
 				{
 					email,
-					password
+					password,
 				},
 				config
 			);
 
-			console.log(data);
-
-			localStorage.setItem('mhsInfo', JSON.stringify(data));
+			localStorage.setItem('mhsInfo', JSON.stringify(data.user));
+			// console.log(data.user)
 			setLoading(false);
 			navigate('/dashboard');
 		} catch (error) {
@@ -142,7 +141,7 @@ const Container = styled.div`
 		}
 	}
 
-	.mr-1{
+	.mr-1 {
 		margin-right: 1rem;
 	}
 `;

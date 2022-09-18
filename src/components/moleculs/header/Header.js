@@ -8,7 +8,7 @@ const Header = () => {
 	const navigate = useNavigate();
 
 	const logOut = () => {
-		let confirmBox = window.confirm('Logout?');
+		let confirmBox = window.confirm('Keluar?');
 		if (confirmBox) {
 			localStorage.clear();
 			navigate('/login');

@@ -4,14 +4,16 @@ import { Button } from '../../components/Components';
 
 const Dashboard = () => {
 	let mhsInfo = JSON.parse(localStorage.getItem('mhsInfo'));
+	let { nim, fullName } = mhsInfo;
+
 	return (
 		<div>
 			<Helmet>
 				<title>Dashboard | Lapor MBKM</title>
 			</Helmet>
 			<div className="mb-1">
-				<h2>Selamat datang, {mhsInfo.fullName}!</h2>
-				<p>Nim {mhsInfo.nim}</p>
+				<h2>Selamat datang, {fullName}!</h2>
+				<p>Nim {nim}</p>
 				<p>Jangan lupa isi borangnya hehe!</p>
 			</div>
 

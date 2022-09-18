@@ -20,7 +20,7 @@ const Routes = () => {
 	return (
 		<Router>
 			<Switch>
-				<Route index exact path="login" element={<Login />} />
+				<Route exact path="login" element={<Login />} />
 				<Route exact path="register" element={<Register />} />
 				<Route exact path="/" element={<MainApp />}>
 					<Route index element={<Dashboard />} />

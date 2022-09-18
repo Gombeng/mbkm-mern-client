@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import ClipLoader from 'react-spinners/ClipLoader';
 import { RegisterBg } from '../../assets/Assets';
@@ -9,6 +9,14 @@ import styled from 'styled-components';
 
 const Register = () => {
 	const navigate = useNavigate();
+
+	useEffect(() => {
+		const mhsInfo = localStorage.getItem('mhsInfo');
+
+		if (mhsInfo) {
+			navigate('/dashboard');
+		}
+	}, [navigate]);
 
 	const [nim, setNim] = useState('');
 	const [fullName, setFullName] = useState('');
@@ -35,12 +43,13 @@ const Register = () => {
 					nim,
 					fullName,
 					email,
-					password
+					password,
 				},
 				config
 			);
 
-			localStorage.setItem('mhsInfo', JSON.stringify(data));
+			// console.log(data);
+			localStorage.setItem('mhsInfo', JSON.stringify(data.user));
 			setLoading(false);
 			navigate('/login');
 		} catch (error) {
@@ -118,7 +127,6 @@ const Register = () => {
 
 export default Register;
 
-
 const Container = styled.div`
 	display: flex;
 	min-height: 100vh;
@@ -152,8 +160,8 @@ const Container = styled.div`
 			border-radius: 50%;
 		}
 	}
-	
-	.mr-1{
+
+	.mr-1 {
 		margin-right: 1rem;
 	}
 `;
