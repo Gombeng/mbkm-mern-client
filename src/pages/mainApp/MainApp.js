@@ -8,9 +8,9 @@ const MainApp = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		const mhsInfo = localStorage.getItem('mhsInfo');
+		const token = sessionStorage.getItem('token');
 
-		if (!mhsInfo) {
+		if (!token) {
 			navigate('/login');
 		}
 	}, [navigate]);

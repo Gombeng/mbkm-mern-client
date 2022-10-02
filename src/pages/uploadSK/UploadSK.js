@@ -7,55 +7,44 @@ import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 
 const UploadSK = () => {
-	let mhsInfo = JSON.parse(localStorage.getItem('mhsInfo'));
-	console.log(mhsInfo);
-	let { _id, skAcc } = mhsInfo;
+	let mhsInfo = JSON.parse(sessionStorage.getItem('mhsInfo'));
+	// console.log(mhsInfo);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(false);
 	const [success, setSuccess] = useState(false);
 	const [file, setFile] = useState(null);
 
-	const handleSubmit = async (e) => {
-		e.preventDefault();
+	// const handleSubmit = async (e) => {
+	// 	e.preventDefault();
 
-		let formData = new FormData();
-		formData.append('skAcc', file);
+	// 	let formData = new FormData();
+	// 	formData.append('skAcc', file);
 
-		try {
-			const config = {
-				headers: {
-					'Content-type': 'multipart/form-data',
-				},
-			};
+	// 	try {
+	// 		const config = {
+	// 			headers: {
+	// 				'Content-type': 'multipart/form-data',
+	// 			},
+	// 		};
 
-			setLoading(true);
+	// 		setLoading(true);
 
-			const { user } = await axios.patch(
-				`http://localhost:8910/api/student/update/${_id}`,
-				{
-					file,
-				},
-				config
-			);
+	// 		const { user } = await axios.patch(
+	// 			`http://localhost:8910/api/student/upload/${_id}`,
+	// 			{
+	// 				file,
+	// 			},
+	// 			config
+	// 		);
 
-			if (!user) {
-				setError('Something wrong!');
-				setLoading(false);
-			}
-
-			setLoading(false);
-			console.log(user);
-			// const updatedUser = {
-			// 	...JSON.parse(localStorage.getItem('mhsInfo')),
-			// 	...user,
-			// };
-			// localStorage.setItem('mhsInfo', JSON.stringify(user));
-			setSuccess('Berhasil Upload SK');
-		} catch (error) {
-			setLoading(false);
-			console.log(error.response);
-		}
-	};
+	// 		console.log(user);
+	// 		console.log(file);
+	// 		setSuccess('Berhasil Upload SK');
+	// 	} catch (error) {
+	// 		setLoading(false);
+	// 		console.log(error.response);
+	// 	}
+	// };
 
 	return (
 		<div>
@@ -63,43 +52,40 @@ const UploadSK = () => {
 				<title>Upload SK | Lapor MBKM</title>
 			</Helmet>
 
-			{!skAcc ? (
-				<div>
-					<h2 className="mb-1">Silahkan Upload SK diterima mitra</h2>
+			<div>
+				<h2 className="mb-1">Silahkan Upload SK diterima mitra</h2>
 
-					<hr className="mb-1" />
-					{/* <Gap height={20} /> */}
-					<form onSubmit={handleSubmit} encType="multipart/form-data">
-						{error && <Message className="mb-1 error">{error}</Message>}
+				<hr className="mb-1" />
+				{/* <Gap height={20} /> */}
 
-						<Input
-							className="border-none p-0"
-							type="file"
-							accept=".png, .jpg, .jpeg"
-							name="file"
-							onChange={(e) => {
-								setFile(e.target.files[0]);
-							}}
-							required
-						/>
-						<Gap height={30} />
+				<h1>aku rase upload sk ni join di dashboard aje</h1>
 
-						<Button
-							title={loading ? <ClipLoader size={20} /> : 'Upload SK'}
-							className="button mr-1"
-							type="submit"
-						/>
-					</form>
-				</div>
-			) : (
-				<Box>
-					{success && <Message className="mb-1 success">{success}</Message>}
-					<h1 className="mb-1">SK diterima mitra sudah di upload</h1>
-					<NavLink to="/isi-borang">
-						<Button title="Isi Borang" />
-					</NavLink>
-				</Box>
-			)}
+				<form
+					// onSubmit={handleSubmit}
+
+					encType="multipart/form-data"
+				>
+					{error && <Message className="mb-1 error">{error}</Message>}
+
+					<Input
+						className="border-none p-0"
+						type="file"
+						accept=".png, .jpg, .jpeg"
+						name="file"
+						onChange={(e) => {
+							setFile(e.target.files[0]);
+						}}
+						required
+					/>
+					<Gap height={30} />
+
+					<Button
+						title={loading ? <ClipLoader size={20} /> : 'Upload SK'}
+						className="button mr-1"
+						type="submit"
+					/>
+				</form>
+			</div>
 		</div>
 	);
 };

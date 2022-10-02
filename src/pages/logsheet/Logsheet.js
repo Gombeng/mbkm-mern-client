@@ -1,27 +1,45 @@
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
-
-const ContainerItem = styled.div`
-	display: flex;
-	gap: 1rem;
-	flex-wrap: wrap;
-`;
-
-const Item = styled.div`
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	color: white;
-	width: 6rem;
-	height: 6rem;
-	background-color: #244b6d;
-	border-radius: 0.3rem;
-`;
+import { Button, Gap, Input, Message } from '../../components/Components';
 
 const Logsheet = () => {
-	let week = 1;
-	let days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
+	const [error, setError] = useState(false);
+	const [loading, setLoading] = useState(false);
+
+	const submitHandler = async (e) => {
+		e.preventDefault();
+
+		try {
+			const config = {
+				headers: {
+					'Content-type': 'application/json',
+				},
+			};
+
+			setLoading(true);
+
+			const { data } = await axios.post(
+				'http://localhost:8910/api/student/login',
+				{
+					email,
+					password,
+				},
+				config
+			);
+
+			console.log(data);
+
+			setLoading(false);
+		} catch (error) {
+			setLoading(false);
+			console.log(error.response);
+			setError(error.response.data.message);
+		}
+	};
 
 	return (
 		<div>
@@ -30,26 +48,39 @@ const Logsheet = () => {
 			</Helmet>
 
 			<div>
-				<h2 className="mb-1">Upload Logsheet harian anda</h2>
+				<h2 className="mb-1">Silahkan Upload Logsheet harian</h2>
+
 				<hr className="mb-1" />
 
-				<p className="mb-1">
-					<strong>Minggu ke - {week++}</strong>
-				</p>
-				<ContainerItem className="mb-1">
-					{days.map((day) => (
-						<Item>{day}</Item>
-					))}
-				</ContainerItem>
+				<form className="right" onSubmit={submitHandler}>
+					<h2 className="mb-1">Silahkan Masuk</h2>
 
-				<p className="mb-1">
-					<strong>Minggu ke - {week++}</strong>
-				</p>
-				<ContainerItem className="mb-1">
-					{days.map((day) => (
-						<Item>{day}</Item>
-					))}
-				</ContainerItem>
+					{error && <Message className="mb-1 error">{error}</Message>}
+
+					<Input
+						value={email}
+						onChange={(e) => setEmail(e.target.value)}
+						label="Email"
+						type="email"
+						placeholder="user@gmail.com"
+					/>
+					<Gap height={20} />
+
+					<Input
+						value={password}
+						onChange={(e) => setPassword(e.target.value)}
+						label="Kata Sandi"
+						type="password"
+						placeholder="********"
+					/>
+					<Gap height={20} />
+
+					<Button
+						title={loading ? <ClipLoader size={20} /> : 'Upload'}
+						className="button mr-1"
+						type="submit"
+					/>
+				</form>
 			</div>
 		</div>
 	);

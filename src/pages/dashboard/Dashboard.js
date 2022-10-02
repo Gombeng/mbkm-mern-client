@@ -3,8 +3,9 @@ import { Helmet } from 'react-helmet';
 import { Button } from '../../components/Components';
 
 const Dashboard = () => {
-	let mhsInfo = JSON.parse(localStorage.getItem('mhsInfo'));
-	let { nim, fullName } = mhsInfo;
+	let mhsInfo = JSON.parse(sessionStorage.getItem('mhsInfo'));
+
+	//  let { nim, fullName } = mhsInfo;
 
 	return (
 		<div>
@@ -12,8 +13,8 @@ const Dashboard = () => {
 				<title>Dashboard | Lapor MBKM</title>
 			</Helmet>
 			<div className="mb-1">
-				<h2>Selamat datang, {fullName}!</h2>
-				<p>Nim {nim}</p>
+				<h2>Selamat datang, {mhsInfo?.fullName}!</h2>
+				<p>Nim {mhsInfo?.nim}</p>
 				<p>Jangan lupa isi borangnya hehe!</p>
 			</div>
 
