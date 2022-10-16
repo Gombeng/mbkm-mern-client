@@ -10,7 +10,7 @@ const Header = () => {
 	const logOut = () => {
 		let confirmBox = window.confirm('Keluar?');
 		if (confirmBox) {
-			sessionStorage.clear();
+			localStorage.clear();
 			navigate('/login');
 		}
 	};

@@ -1,16 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Helmet } from 'react-helmet';
-import styled from 'styled-components';
 import { Button, Gap, Input, Message } from '../../components/Components';
+import ClipLoader from 'react-spinners/ClipLoader';
 
 const Logsheet = () => {
-	const [email, setEmail] = useState('');
-	const [password, setPassword] = useState('');
+	const mhsInfo = JSON.parse(localStorage.getItem('mhsInfo'));
+	const [logsheet, setLogsheet] = useState('');
 	const [error, setError] = useState(false);
+	const [message, setMessage] = useState('');
 	const [loading, setLoading] = useState(false);
 
-	const submitHandler = async (e) => {
+	useEffect(() => {
+		let submittedDate = localStorage.getItem('submitted-date');
+
+		if (submittedDate) {
+			// setMessage(true);
+			setMessage('Logsheet berhasil diupload, Upload lagi besok!');
+		}
+	}, []);
+
+	const handleSubmit = async (e) => {
 		e.preventDefault();
 
 		try {
@@ -23,17 +33,41 @@ const Logsheet = () => {
 			setLoading(true);
 
 			const { data } = await axios.post(
-				'http://localhost:8910/api/student/login',
-				{
-					email,
-					password,
-				},
+				`http://localhost:8910/api/student/upload-logsheet/${mhsInfo?._id}`,
+				{ logsheet },
 				config
 			);
 
-			console.log(data);
+			if (data) {
+				// console.log(data.logsheet);
+				setLoading(false);
+				// Save current timestamp to localstorage
+				localStorage.setItem(
+					'submitted-date',
+					JSON.stringify(new Date().getTime())
+				);
 
-			setLoading(false);
+				setMessage('Logsheet berhasil diupload, Upload lagi besok!');
+
+				const submittedDate = localStorage.getItem('submitted-date');
+				// setLs(submittedDate);
+
+				if (!submittedDate) {
+					// Submit your form here because this is the first time or there is nothing in localstorage
+					handleSubmit();
+				} else {
+					const timestamp = new Date().getTime(); // Unix timestamp
+					const timeDiff = Math.abs(submittedDate - timestamp); // Calculate difference between current timestamp and saved timestamp
+					const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); // Get day from timestamp
+
+					if (diffDays < 1) {
+						return;
+					} else {
+						// It has been more than a day from last submission - Allow form submission
+						handleSubmit();
+					}
+				}
+			}
 		} catch (error) {
 			setLoading(false);
 			console.log(error.response);
@@ -52,35 +86,36 @@ const Logsheet = () => {
 
 				<hr className="mb-1" />
 
-				<form className="right" onSubmit={submitHandler}>
-					<h2 className="mb-1">Silahkan Masuk</h2>
+				{message ? (
+					<Message className="mb-1 success">{message}</Message>
+				) : (
+					<form onSubmit={handleSubmit}>
+						{error && <Message className="mb-1 error">{error}</Message>}
 
-					{error && <Message className="mb-1 error">{error}</Message>}
+						<p className="mb-1">
+							Silahkan upload logsheet ke Google drive dan input linknya disini
+						</p>
 
-					<Input
-						value={email}
-						onChange={(e) => setEmail(e.target.value)}
-						label="Email"
-						type="email"
-						placeholder="user@gmail.com"
-					/>
-					<Gap height={20} />
+						<div>
+							<Input
+								className="b-1 p-1"
+								value={logsheet}
+								onChange={(e) => setLogsheet(e.target.value)}
+								label="Logsheet"
+								type="url"
+								placeholder="drive.google.com"
+							/>
+							<Gap height={20} />
 
-					<Input
-						value={password}
-						onChange={(e) => setPassword(e.target.value)}
-						label="Kata Sandi"
-						type="password"
-						placeholder="********"
-					/>
-					<Gap height={20} />
-
-					<Button
-						title={loading ? <ClipLoader size={20} /> : 'Upload'}
-						className="button mr-1"
-						type="submit"
-					/>
-				</form>
+							<Button
+								title={loading ? <ClipLoader size={20} /> : 'Upload'}
+								className="button mr-1"
+								type="submit"
+								// disabled={disabled}
+							/>
+						</div>
+					</form>
+				)}
 			</div>
 		</div>
 	);

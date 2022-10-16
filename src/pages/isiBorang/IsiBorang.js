@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet';
 import ClipLoader from 'react-spinners/ClipLoader';
 
 const IsiBorang = () => {
-	let mhsInfo = JSON.parse(sessionStorage.getItem('mhsInfo'));
+	let mhsInfo = JSON.parse(localStorage.getItem('mhsInfo'));
 
 	return (
 		<div>

@@ -8,7 +8,7 @@ const MainApp = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		const token = sessionStorage.getItem('token');
+		const token = localStorage.getItem('token');
 
 		if (!token) {
 			navigate('/login');
@@ -25,12 +25,6 @@ const MainApp = () => {
 						to="dashboard"
 					>
 						Dashboard
-					</NavLink>
-					<NavLink
-						className={({ isActive }) => (isActive ? 'link active' : 'link')}
-						to="upload-sk"
-					>
-						Upload SK
 					</NavLink>
 					<NavLink
 						className={({ isActive }) => (isActive ? 'link active' : 'link')}

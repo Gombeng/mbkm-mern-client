@@ -11,7 +11,8 @@ const Login = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		const mhsInfo = sessionStorage.getItem('mhsInfo');
+		const mhsInfo = localStorage.getItem('mhsInfo');
+		// ! update local storage using .push method
 
 		if (mhsInfo) {
 			navigate('/dashboard');
@@ -45,8 +46,8 @@ const Login = () => {
 			);
 
 			console.log(data);
-			sessionStorage.setItem('token', JSON.stringify(data.token));
-			sessionStorage.setItem('mhsInfo', JSON.stringify(data.user));
+			localStorage.setItem('token', JSON.stringify(data.token));
+			localStorage.setItem('mhsInfo', JSON.stringify(data.data));
 
 			// console.log(data.user)
 			setLoading(false);

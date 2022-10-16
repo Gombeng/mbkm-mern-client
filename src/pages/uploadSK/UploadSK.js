@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 
 const UploadSK = () => {
-	let mhsInfo = JSON.parse(sessionStorage.getItem('mhsInfo'));
+	let mhsInfo = JSON.parse(localStorage.getItem('mhsInfo'));
 	// console.log(mhsInfo);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(false);

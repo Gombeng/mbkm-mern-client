@@ -11,7 +11,7 @@ const Register = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		const mhsInfo = sessionStorage.getItem('mhsInfo');
+		const mhsInfo = localStorage.getItem('mhsInfo');
 
 		if (mhsInfo) {
 			navigate('/dashboard');
@@ -49,8 +49,8 @@ const Register = () => {
 			);
 
 			// console.log(data);
-			sessionStorage.setItem('token', JSON.stringify(data.token));
-			sessionStorage.setItem('mhsInfo', JSON.stringify(data.user));
+			localStorage.setItem('token', JSON.stringify(data.token));
+			localStorage.setItem('mhsInfo', JSON.stringify(data.data));
 			setLoading(false);
 			navigate('/login');
 		} catch (error) {
