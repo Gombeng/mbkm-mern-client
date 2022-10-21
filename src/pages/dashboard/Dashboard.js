@@ -8,8 +8,8 @@ import axios from 'axios';
 const Dashboard = () => {
 	let mhsInfo = JSON.parse(localStorage.getItem('mhsInfo'));
 
-	console.log(mhsInfo);
-	//  let { nim, fullName } = mhsInfo;
+	// console.log(mhsInfo);
+	// //  let { nim, fullName } = mhsInfo;
 
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(false);
@@ -31,7 +31,7 @@ const Dashboard = () => {
 
 			setLoading(true);
 
-			const { user } = await axios.patch(
+			const user = await axios.patch(
 				`http://localhost:8910/api/student/upload/${mhsInfo?._id}`,
 				{
 					file,
@@ -41,7 +41,7 @@ const Dashboard = () => {
 
 			console.log(user);
 			console.log(file);
-			// window.location.reload();
+			window.location.reload();
 		} catch (error) {
 			setLoading(false);
 			console.log(error.response);
