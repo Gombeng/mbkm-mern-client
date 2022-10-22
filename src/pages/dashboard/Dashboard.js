@@ -37,7 +37,7 @@ const Dashboard = () => {
 			setLoading(true);
 
 			const user = await axios.patch(
-				`http://localhost:8910/api/student/upload/${mhsInfo._id}`,
+				`http://localhost:8910/api/student/upload/${mhsInfo?._id}`,
 				{
 					file,
 				},
