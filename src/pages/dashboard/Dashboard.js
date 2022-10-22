@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { Button } from '../../components/Components';
 import { Gap, Message, Input } from '../../components/atoms/Atoms';
@@ -6,15 +6,20 @@ import { ClipLoader } from 'react-spinners/ClipLoader';
 import axios from 'axios';
 
 const Dashboard = () => {
-	let mhsInfo = JSON.parse(localStorage.getItem('mhsInfo'));
+	const mhsInfo = JSON.parse(localStorage.getItem('mhsInfo'));
+	const skUploaded = localStorage.getItem('skAcc');
 
-	console.log(mhsInfo);
+	// console.log(skUploaded.valueOf);
 	//  let { nim, fullName } = mhsInfo;
 
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(false);
-	const [success, setSuccess] = useState(false);
+	const [skAcc, setSkAcc] = useState(false);
 	const [file, setFile] = useState(null);
+
+	useEffect(() => {
+		if (skUploaded) setSkAcc(true);
+	}, [skUploaded]);
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -31,17 +36,18 @@ const Dashboard = () => {
 
 			setLoading(true);
 
-			const { user } = await axios.patch(
-				`http://localhost:8910/api/student/upload/${mhsInfo?._id}`,
+			const user = await axios.patch(
+				`http://localhost:8910/api/student/upload/${mhsInfo._id}`,
 				{
 					file,
 				},
 				config
 			);
 
-			console.log(user);
-			console.log(file);
-			// window.location.reload();
+			console.log(user.data);
+			console.log(file.name);
+			localStorage.setItem('skAcc', file.name);
+			window.location.reload();
 		} catch (error) {
 			setLoading(false);
 			console.log(error.response);
@@ -59,31 +65,33 @@ const Dashboard = () => {
 				<p>{mhsInfo?.fullName}</p>
 			</div>
 
-			<div className="mb-1">
-				<h2 className="mb-1">Upload SK diterima Mitra</h2>
+			{skAcc && (
+				<div className="mb-1">
+					<h2 className="mb-1">Upload SK diterima Mitra</h2>
 
-				<form onSubmit={handleSubmit} encType="multipart/form-data">
-					{error && <Message className="mb-1 error">{error}</Message>}
+					<form onSubmit={handleSubmit} encType="multipart/form-data">
+						{error && <Message className="mb-1 error">{error}</Message>}
 
-					<Input
-						className="border-none p-0"
-						type="file"
-						accept=".png, .jpg, .jpeg"
-						name="file"
-						onChange={(e) => {
-							setFile(e.target.files[0]);
-						}}
-						required
-					/>
-					<Gap height={30} />
+						<Input
+							className="border-none p-0"
+							type="file"
+							accept=".png, .jpg, .jpeg"
+							name="file"
+							onChange={(e) => {
+								setFile(e.target.files[0]);
+							}}
+							required
+						/>
+						<Gap height={30} />
 
-					<Button
-						title={loading ? <ClipLoader size={20} /> : 'Upload SK'}
-						className="button mr-1"
-						type="submit"
-					/>
-				</form>
-			</div>
+						<Button
+							title={loading ? <ClipLoader size={20} /> : 'Upload SK'}
+							className="button mr-1"
+							type="submit"
+						/>
+					</form>
+				</div>
+			)}
 		</div>
 	);
 };

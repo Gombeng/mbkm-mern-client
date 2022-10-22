@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { Helmet } from 'react-helmet';
 import { Button, Gap, Input, Message } from '../../components/Components';
@@ -11,69 +11,61 @@ const Logsheet = () => {
 	const [message, setMessage] = useState('');
 	const [loading, setLoading] = useState(false);
 
-	useEffect(() => {
-		let submittedDate = localStorage.getItem('submitted-date');
+	const handleSubmit = useCallback(
+		async (e) => {
+			e.preventDefault();
 
-		if (submittedDate) {
-			// setMessage(true);
-			setMessage('Logsheet berhasil diupload, Upload lagi besok!');
-		}
-	}, []);
+			try {
+				const config = {
+					headers: {
+						'Content-type': 'application/json',
+					},
+				};
 
-	const handleSubmit = async (e) => {
-		e.preventDefault();
+				setLoading(true);
 
-		try {
-			const config = {
-				headers: {
-					'Content-type': 'application/json',
-				},
-			};
-
-			setLoading(true);
-
-			const { data } = await axios.post(
-				`http://localhost:8910/api/student/upload-logsheet/${mhsInfo?._id}`,
-				{ logsheet },
-				config
-			);
-
-			if (data) {
-				// console.log(data.logsheet);
-				setLoading(false);
-				// Save current timestamp to localstorage
-				localStorage.setItem(
-					'submitted-date',
-					JSON.stringify(new Date().getTime())
+				const { data } = await axios.post(
+					`http://localhost:8910/api/student/upload-logsheet/${mhsInfo?._id}`,
+					{ logsheet },
+					config
 				);
 
-				setMessage('Logsheet berhasil diupload, Upload lagi besok!');
+				if (data) {
+					console.log(data.logsheet);
+					setLoading(false);
 
-				const submittedDate = localStorage.getItem('submitted-date');
-				// setLs(submittedDate);
+					// Save current timestamp to localstorage
+					localStorage.setItem(
+						'submitted-date',
+						JSON.stringify(new Date().getTime())
+					);
 
-				if (!submittedDate) {
-					// Submit your form here because this is the first time or there is nothing in localstorage
-					handleSubmit();
-				} else {
-					const timestamp = new Date().getTime(); // Unix timestamp
-					const timeDiff = Math.abs(submittedDate - timestamp); // Calculate difference between current timestamp and saved timestamp
-					const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); // Get day from timestamp
-
-					if (diffDays < 1) {
-						return;
-					} else {
-						// It has been more than a day from last submission - Allow form submission
-						handleSubmit();
-					}
+					setMessage('Logsheet berhasil diupload, Upload lagi besok!');
 				}
+			} catch (error) {
+				setLoading(false);
+				console.log(error.response);
+				setError(error.response.data.message);
 			}
-		} catch (error) {
-			setLoading(false);
-			console.log(error.response);
-			setError(error.response.data.message);
+		},
+		[logsheet, mhsInfo?._id]
+	);
+
+	useEffect(() => {
+		const submittedDate = localStorage.getItem('submitted-date');
+		const timestamp = new Date().getTime(); // Unix timestamp
+		const timeDiff = Math.abs(submittedDate - timestamp); // Calculate difference between current timestamp and saved timestamp
+		const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); // Get day from timestamp
+
+		if (!submittedDate) {
+			// Submit your form here because this is the first time or there is nothing in localstorage
+			handleSubmit();
 		}
-	};
+
+		if (submittedDate && diffDays < 1) {
+			setMessage('Logsheet berhasil diupload, Upload lagi besok!');
+		}
+	}, [handleSubmit]);
 
 	return (
 		<div>
