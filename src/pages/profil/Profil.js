@@ -13,7 +13,7 @@ const Profil = () => {
 				<title>Profil | Lapor MBKM</title>
 			</Helmet>
 
-			<h2 className="mb-1">Profil</h2>
+			<h3 className="mb-1">Profil</h3>
 			<hr className="mb-1" />
 
 			<Flexbox>

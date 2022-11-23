@@ -53,7 +53,7 @@ const UploadSK = () => {
 			</Helmet>
 
 			<div>
-				<h2 className="mb-1">Silahkan Upload SK diterima mitra</h2>
+				<h3 className="mb-1">Silahkan Upload SK diterima mitra</h3>
 
 				<hr className="mb-1" />
 				{/* <Gap height={20} /> */}

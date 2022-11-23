@@ -74,7 +74,7 @@ const Logsheet = () => {
 			</Helmet>
 
 			<div>
-				<h2 className="mb-1">Silahkan Upload Logsheet harian</h2>
+				<h3 className="mb-1">Silahkan Upload Logsheet harian</h3>
 
 				<hr className="mb-1" />
 

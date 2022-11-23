@@ -69,7 +69,7 @@ const Register = () => {
 			</div>
 
 			<form className="right" onSubmit={submitHandler}>
-				<h2 className="mb-1">Silahkan Daftar</h2>
+				<h3 className="mb-1">Silahkan Daftar</h3>
 
 				{error && <Message className="mb-1 error">{error}</Message>}
 

@@ -60,14 +60,14 @@ const Dashboard = () => {
 				<title>Dashboard | Lapor MBKM</title>
 			</Helmet>
 			<div className="mb-1">
-				<h2>Selamat datang!</h2>
+				<h3>Selamat datang!</h3>
 				<p>Nim {mhsInfo?.nim}</p>
 				<p>{mhsInfo?.fullName}</p>
 			</div>
 
-			{skAcc && (
+			{!skAcc && (
 				<div className="mb-1">
-					<h2 className="mb-1">Upload SK diterima Mitra</h2>
+					<h3 className="mb-1">Upload SK diterima Mitra</h3>
 
 					<form onSubmit={handleSubmit} encType="multipart/form-data">
 						{error && <Message className="mb-1 error">{error}</Message>}
