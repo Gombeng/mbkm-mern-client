@@ -7,7 +7,6 @@ import NotFound from './notFound/NotFound';
 import Register from './register/Register';
 import Profil from './profil/Profil';
 import UploadSK from './uploadSK/UploadSK';
-import Detail from './isiBorang/detail/Detail';
 import PilihCpmk from './isiBorang/pilihCpmk/PilihCpmk';
 
 export {
@@ -20,6 +19,5 @@ export {
 	NotFound,
 	Profil,
 	UploadSK,
-	Detail,
 	PilihCpmk,
 };

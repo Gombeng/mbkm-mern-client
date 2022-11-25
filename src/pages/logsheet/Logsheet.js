@@ -7,8 +7,8 @@ import ClipLoader from 'react-spinners/ClipLoader';
 const Logsheet = () => {
 	const mhsInfo = JSON.parse(localStorage.getItem('mhsInfo'));
 	const [logsheet, setLogsheet] = useState('');
-	const [error, setError] = useState(false);
 	const [message, setMessage] = useState('');
+	const [error, setError] = useState(false);
 	const [loading, setLoading] = useState(false);
 
 	const handleSubmit = useCallback(

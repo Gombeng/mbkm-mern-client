@@ -41,11 +41,6 @@ const Routes = () => {
 						path="isi-borang/:subject/:idBorang"
 						element={<PilihCpmk />}
 					/>
-					<Route
-						exact
-						path="isi-borang/:idMatkul/:idCpmk"
-						element={<Detail />}
-					/>
 					<Route exact path="logsheet" element={<Logsheet />} />
 					<Route exact path="profil" element={<Profil />} />
 					<Route exact path="*" element={<NotFound />} />

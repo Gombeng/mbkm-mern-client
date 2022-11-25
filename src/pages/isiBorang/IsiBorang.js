@@ -14,6 +14,8 @@ const IsiBorang = () => {
 	const [borangs, setBorangs] = useState('');
 	const mhsInfo = JSON.parse(localStorage.getItem('mhsInfo'));
 
+	// console.log(borangs);
+
 	useEffect(() => {
 		(async () => {
 			const config = {
@@ -31,7 +33,7 @@ const IsiBorang = () => {
 			setData(data.data);
 
 			const borangs = await axios.get(
-				`http://localhost:8910/api/student/borangs/${mhsInfo?._id}`,
+				`http://localhost:8910/api/student/getOne/student-borangs/${mhsInfo?._id}`,
 				config
 			);
 
@@ -94,7 +96,7 @@ const IsiBorang = () => {
 				</thead>
 				<tbody>
 					{data.length &&
-						data.map(({ _id, code, name }) => (
+						data?.map(({ _id, code, name }) => (
 							<tr key={_id}>
 								<td>{i++}</td>
 								<td>{code}</td>
@@ -113,7 +115,7 @@ const IsiBorang = () => {
 				>
 					<option value="">-- Pilih Matkul --</option>
 					{data.length &&
-						data.map(({ _id, name }) => (
+						data?.map(({ _id, name }) => (
 							<option key={_id} value={name}>
 								{name}
 							</option>
@@ -131,7 +133,7 @@ const IsiBorang = () => {
 
 			<Container>
 				{borangs.length &&
-					borangs.map(({ _id, subject }) => (
+					borangs?.map(({ _id, subject }) => (
 						<Link
 							className="card"
 							key={_id}

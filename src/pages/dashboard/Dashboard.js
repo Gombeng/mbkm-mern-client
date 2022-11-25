@@ -13,7 +13,6 @@ const Dashboard = () => {
 	//  let { nim, fullName } = mhsInfo;
 
 	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState(false);
 	const [skAcc, setSkAcc] = useState(false);
 	const [file, setFile] = useState(null);
 
@@ -22,7 +21,7 @@ const Dashboard = () => {
 	}, [skUploaded]);
 
 	const handleSubmit = async (e) => {
-		e.preventDefault();
+		// e.preventDefault();
 
 		let formData = new FormData();
 		formData.append('skAcc', file);
@@ -37,7 +36,7 @@ const Dashboard = () => {
 			setLoading(true);
 
 			const user = await axios.patch(
-				`http://localhost:8910/api/student/upload/${mhsInfo?._id}`,
+				`http://localhost:8910/api/student/sk-mitra/${mhsInfo?._id}`,
 				{
 					file,
 				},
@@ -65,17 +64,16 @@ const Dashboard = () => {
 				<p>{mhsInfo?.fullName}</p>
 			</div>
 
-			{!skAcc && (
+			{!skAcc ? (
 				<div className="mb-1">
 					<h3 className="mb-1">Upload SK diterima Mitra</h3>
 
 					<form onSubmit={handleSubmit} encType="multipart/form-data">
-						{error && <Message className="mb-1 error">{error}</Message>}
-
 						<Input
 							className="border-none p-0"
 							type="file"
-							accept=".png, .jpg, .jpeg"
+							// accept=".png, .jpg, .jpeg"
+							accept=".pdf"
 							name="file"
 							onChange={(e) => {
 								setFile(e.target.files[0]);
@@ -91,6 +89,10 @@ const Dashboard = () => {
 						/>
 					</form>
 				</div>
+			) : (
+				<Message className="mb-1 success">
+					Surat keterangan diterima mitra sudah diupload
+				</Message>
 			)}
 		</div>
 	);
