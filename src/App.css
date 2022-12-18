@@ -19,6 +19,14 @@ body {
 	border: 1px solid black;
 }
 
+.bg-error {
+	background: #d22525;
+}
+
+.bg-success {
+	background: #25d253;
+}
+
 .error {
 	padding: 1em;
 	background: #d22525;

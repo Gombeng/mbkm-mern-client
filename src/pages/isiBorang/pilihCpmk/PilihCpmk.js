@@ -14,61 +14,49 @@ const PilihCpmk = () => {
 	const [code, setCode] = useState('');
 	const [borang, setBorang] = useState('');
 
-	console.log(borang);
-
-	async function fetchMatkul() {
-		const config = {
-			headers: {
-				'Content-type': 'application/json',
-			},
-		};
-
-		const { data } = await axios.get(
-			`http://localhost:8910/api/admin/getOne/subjects/${subject}`,
-			config
-		);
-		setData(data.data);
-	}
-
-	async function fetchBorang() {
-		const config = {
-			headers: {
-				'Content-type': 'application/json',
-			},
-		};
-
-		const { data } = await axios.get(
-			`http://localhost:8910/api/student/getAll/borangs/${idBorang}/answers`,
-			config
-		);
-		setBorang(data);
-	}
-
 	useEffect(() => {
-		fetchBorang();
+		const config = {
+			headers: {
+				'Content-type': 'application/json',
+			},
+		};
+		const fetchMatkul = async () => {
+			const { data } = await axios.get(
+				`http://localhost:8910/api/admins/getOne/subjects/${subject}`,
+				config
+			);
+			console.log('subject', data.data[0].idCpmks);
+			setData(data.data[0].idCpmks);
+		};
 		fetchMatkul();
-	}, []);
+		const fetchBorang = async () => {
+			const { data } = await axios.get(
+				`http://localhost:8910/api/students/borangs/answers/${idBorang}`,
+				config
+			);
+			console.log('borang', data.data.idAnswers);
+			setBorang(data.data.idAnswers);
+		};
+		fetchBorang();
+	}, [idBorang, subject]);
+
+	const config = {
+		headers: {
+			'Content-type': 'application/json',
+		},
+	};
 
 	const submitHandler = async (e) => {
-		e.preventDefault();
 		try {
-			const config = {
-				headers: {
-					'Content-type': 'application/json',
-				},
-			};
-
 			setLoading(true);
-
 			const { data } = await axios.post(
-				`http://localhost:8910/api/student/isi-cpmk/${idBorang}`,
+				`http://localhost:8910/api/students/isi-cpmk/${idBorang}`,
 				{
 					name: code,
 					answer,
 				},
 				config
 			);
-
 			console.log(data.data);
 			setLoading(false);
 			window.location.reload();
@@ -80,14 +68,7 @@ const PilihCpmk = () => {
 	};
 
 	const deleteHandler = async (e) => {
-		// e.preventDefault();
 		setLoading(true);
-		const config = {
-			headers: {
-				'Content-type': 'application/json',
-			},
-		};
-
 		let confirmBox = window.confirm('Hapus isian CPMK ini?');
 		if (confirmBox) {
 			await axios
@@ -107,7 +88,6 @@ const PilihCpmk = () => {
 	let i = 1;
 	let j = 1;
 
-	// console.log(borang._answers);
 	return (
 		<div>
 			<Helmet>
@@ -118,7 +98,7 @@ const PilihCpmk = () => {
 			</FlexBox>
 			<hr className="mb-1" />
 
-			<h3 className="mb-1">{data.name}</h3>
+			<p className="mb-1">{subject}</p>
 
 			<Table className="mb-1">
 				<thead>
@@ -129,70 +109,95 @@ const PilihCpmk = () => {
 					</tr>
 				</thead>
 				<tbody>
-					{data.length &&
-						data[0]._cpmks?.map(({ _id, code, name }) => (
+					{!data?.length ? (
+						<tr>
+							<td colSpan={3}>Data kosong</td>
+						</tr>
+					) : (
+						data?.map(({ _id, code, name }) => (
 							<tr key={_id}>
 								<td>{i++}</td>
 								<td>{code}</td>
 								<td>{name}</td>
 							</tr>
-						))}
+						))
+					)}
 				</tbody>
 			</Table>
 
-			<form className="mb-1" onSubmit={submitHandler}>
-				<Select
-					className=" p-1"
-					value={code}
-					onChange={(e) => setCode(e.target.value)}
-					required
-				>
-					<option value="">-- Pilih Kode CPMK --</option>
-					{data.length &&
-						data[0]._cpmks?.map(({ _id, code, name }) => (
-							<option key={_id} value={name}>
-								{code}
-							</option>
-						))}
-				</Select>
+			{!data?.length ? (
+				''
+			) : (
+				<form className="mb-1" onSubmit={submitHandler}>
+					<Select
+						className=" p-1"
+						value={code}
+						onChange={(e) => setCode(e.target.value)}
+						required
+					>
+						<option value="">-- Pilih Kode CPMK --</option>
+						{data?.length &&
+							data?.map(({ _id, code, name }) => (
+								<option key={_id} value={name}>
+									{code}
+								</option>
+							))}
+					</Select>
 
-				<Input
-					value={answer}
-					onChange={(e) => setAnswer(e.target.value)}
-					className=" p-1 mb-1"
-					placeholder="Jawaban anda..."
-				/>
+					<Input
+						value={answer}
+						onChange={(e) => setAnswer(e.target.value)}
+						className=" p-1 mb-1"
+						placeholder="Jawaban anda..."
+					/>
 
-				<Button
-					title={loading ? <ClipLoader size={20} /> : 'Submit'}
-					className="button mr-1"
-					type="submit"
-				/>
-			</form>
+					<Button
+						title={loading ? <ClipLoader size={20} /> : 'Submit'}
+						className="button mr-1"
+						type="submit"
+					/>
+				</form>
+			)}
 
-			<Table className="mb-1">
-				<thead>
-					<tr>
-						<th style={{ width: '5rem' }}>No</th>
-						<th style={{ width: '10rem' }}>Deskripsi</th>
-						<th style={{ width: '' }}>Jawaban Anda</th>
-						<th style={{ width: '10rem' }}>Aksi</th>
-					</tr>
-				</thead>
-				<tbody>
-					{borang?._answers?.map(({ _id, answer, name }) => (
-						<tr key={_id}>
-							<td>{j++}</td>
-							<td>{name}</td>
-							<td>{answer}</td>
-							<td>
-								{/* <p style={{ padding: '.3rem' }}>Edit</p> */}
-								<DelButton onClick={() => deleteHandler(_id)}>Hapus</DelButton>
-							</td>
-						</tr>
-					))}
-				</tbody>
-			</Table>
+			{!data?.length ? (
+				''
+			) : (
+				<>
+					<p className="mb-1">RPS yang sudah di jawab</p>
+
+					<Table className="mb-1">
+						<thead>
+							<tr>
+								<th style={{ width: '3rem' }}>No</th>
+								<th style={{ width: '20rem' }}>Deskripsi</th>
+								<th style={{ width: '' }}>Jawaban Anda</th>
+								<th style={{ width: '5rem' }}>Aksi</th>
+							</tr>
+						</thead>
+						<tbody>
+							{!borang?.length ? (
+								<tr>
+									<td colSpan={4}>Anda belum menjawab apapun</td>
+								</tr>
+							) : (
+								borang?.map(({ _id, answer, name }) => (
+									<tr key={_id}>
+										<td>{j++}</td>
+										<td>{name}</td>
+										<td>{answer}</td>
+										<td>
+											{/* <p style={{ padding: '.3rem' }}>Edit</p> */}
+											<DelButton onClick={() => deleteHandler(_id)}>
+												Hapus
+											</DelButton>
+										</td>
+									</tr>
+								))
+							)}
+						</tbody>
+					</Table>
+				</>
+			)}
 		</div>
 	);
 };
