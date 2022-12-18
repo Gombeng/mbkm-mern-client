@@ -13,8 +13,6 @@ const Logsheet = () => {
 
 	const handleSubmit = useCallback(
 		async (e) => {
-			e.preventDefault();
-
 			try {
 				const config = {
 					headers: {
@@ -25,7 +23,7 @@ const Logsheet = () => {
 				setLoading(true);
 
 				const { data } = await axios.post(
-					`http://localhost:8910/api/student/upload-logsheet/${mhsInfo?._id}`,
+					`http://localhost:8910/api/students/upload-logsheet/${mhsInfo?._id}`,
 					{ logsheet },
 					config
 				);

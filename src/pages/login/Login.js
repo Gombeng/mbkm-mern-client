@@ -37,7 +37,7 @@ const Login = () => {
 			setLoading(true);
 
 			const { data } = await axios.post(
-				'http://localhost:8910/api/student/login',
+				'http://localhost:8910/api/students/login',
 				{
 					email,
 					password,

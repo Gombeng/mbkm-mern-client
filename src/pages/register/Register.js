@@ -38,7 +38,7 @@ const Register = () => {
 			setLoading(true);
 
 			const { data } = await axios.post(
-				'http://localhost:8910/api/student/register',
+				'http://localhost:8910/api/students/register',
 				{
 					nim,
 					fullName,
