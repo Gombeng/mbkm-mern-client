@@ -14,6 +14,7 @@ const UploadSK = () => {
 	const [success, setSuccess] = useState(false);
 	const [file, setFile] = useState(null);
 
+
 	// const handleSubmit = async (e) => {
 	// 	e.preventDefault();
 
@@ -66,6 +67,7 @@ const UploadSK = () => {
 					encType="multipart/form-data"
 				>
 					{error && <Message className="mb-1 error">{error}</Message>}
+					<Gap height={30} />
 
 					<Input
 						className="border-none p-0"
@@ -104,3 +106,4 @@ const Box = styled.div`
 		color: black;
 	}
 `;
+

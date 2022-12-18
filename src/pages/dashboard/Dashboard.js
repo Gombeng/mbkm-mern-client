@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet';
 import { Button } from '../../components/Components';
 import { Gap, Message, Input } from '../../components/atoms/Atoms';
 import { ClipLoader } from 'react-spinners/ClipLoader';
+import styled from 'styled-components';
 import axios from 'axios';
 
 const Dashboard = () => {
@@ -69,6 +70,15 @@ const Dashboard = () => {
 					<h3 className="mb-1">Upload SK diterima Mitra</h3>
 
 					<form onSubmit={handleSubmit} encType="multipart/form-data">
+
+						<Select
+							className=" p-1"
+							required
+						>
+							<option value="">-- Pilih Kegiatan MBKM --</option>
+						</Select>
+						<Gap height={30} />
+
 						<Input
 							className="border-none p-0"
 							type="file"
@@ -99,3 +109,11 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+const Select = styled.select`
+	cursor: pointer;
+	width: 100%;
+	outline: none;
+	/* padding: 0.8rem 1rem; */
+	border-radius: 0.3rem;
+`;

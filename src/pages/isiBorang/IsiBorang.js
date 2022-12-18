@@ -146,7 +146,8 @@ const IsiBorang = () => {
 							<tr>
 								<th style={{ width: '3rem' }}>No</th>
 								<th style={{ width: '' }}>Nama</th>
-								<th style={{ width: '8rem' }}>Status</th>
+								<th style={{ width: '8rem' }}>Status Dosen</th>
+								<th style={{ width: '12rem' }}>Status Ketua Jurusan</th>
 								<th style={{ width: '5rem' }}>Aksi</th>
 							</tr>
 						</thead>
@@ -160,6 +161,7 @@ const IsiBorang = () => {
 									<tr key={_id}>
 										<td>{i++}</td>
 										<td>{subject}</td>
+										<td>{status}</td>
 										<td>{status}</td>
 										<td>
 											<Link
