@@ -8,7 +8,7 @@ import Register from './register/Register';
 import Profil from './profil/Profil';
 import UploadSK from './uploadSK/UploadSK';
 import PilihCpmk from './isiBorang/pilihCpmk/PilihCpmk';
-
+import UploadLaporanAkhir from './uploadLaporanAkhir';
 export {
 	Dashboard,
 	Login,
@@ -20,4 +20,5 @@ export {
 	Profil,
 	UploadSK,
 	PilihCpmk,
+	UploadLaporanAkhir,
 };

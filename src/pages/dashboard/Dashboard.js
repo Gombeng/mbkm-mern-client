@@ -8,44 +8,53 @@ import axios from 'axios';
 const Dashboard = () => {
 	const mhsInfo = JSON.parse(localStorage.getItem('mhsInfo'));
 	const skUploaded = localStorage.getItem('skAcc');
-
-	// console.log(skUploaded.valueOf);
-	//  let { nim, fullName } = mhsInfo;
-
 	const [loading, setLoading] = useState(false);
 	const [skAcc, setSkAcc] = useState(false);
-	const [file, setFile] = useState(null);
+	const [skAccUploaded, setSkAccUploaded] = useState('')
+	const [data, setData] = useState('')
+
+	const config = {
+		headers: {
+			'Content-type': 'application/json',
+		},
+	};
 
 	useEffect(() => {
-		if (skUploaded) setSkAcc(true);
-	}, [skUploaded]);
+		if (skUploaded) setSkAccUploaded(true);
+		
+		const fetchData = async () => {
+			const { data } = await axios.get(
+				`http://localhost:8910/api/students/${mhsInfo?._id}`,
+				config
+			);
+
+			setData(data.data.laporanAkhir);
+		};
+
+		fetchData();
+	}, []);
 
 	const handleSubmit = async (e) => {
-		// e.preventDefault();
-
-		let formData = new FormData();
-		formData.append('skAcc', file);
-
 		try {
-			const config = {
-				headers: {
-					'Content-type': 'multipart/form-data',
-				},
-			};
 
 			setLoading(true);
 
-			const user = await axios.patch(
+			const data = await axios.post(
 				`http://localhost:8910/api/students/sk-mitra/${mhsInfo?._id}`,
 				{
-					file,
+					skAcc,
 				},
 				config
 			);
 
-			console.log(user.data);
-			console.log(file.name);
-			localStorage.setItem('skAcc', file.name);
+			if (data) {
+				console.log(data.logsheet);
+				setLoading(false);
+			}
+
+			window.alert('Surat Keterangan Diterima Mitra berhasil diupload!');
+			
+			localStorage.setItem('skAcc', data);
 			window.location.reload();
 		} catch (error) {
 			setLoading(false);
@@ -64,23 +73,24 @@ const Dashboard = () => {
 				<p>{mhsInfo?.fullName}</p>
 			</div>
 
-			{!skAcc ? (
+			{!skAccUploaded ? (
 				<div className="mb-1">
 					<h3 className="mb-1">Upload SK diterima Mitra</h3>
 
-					<form onSubmit={handleSubmit} encType="multipart/form-data">
+					<form onSubmit={() => handleSubmit()}>
+						<p className="mb-1">
+							Silahkan upload logsheet ke Google drive dan input linknya disini
+						</p>
+
 						<Input
-							className="border-none p-0"
-							type="file"
-							// accept=".png, .jpg, .jpeg"
-							accept=".pdf"
-							name="file"
-							onChange={(e) => {
-								setFile(e.target.files[0]);
-							}}
-							required
+							className="b-1 p-1"
+							value={skAcc}
+							onChange={(e) => setSkAcc(e.target.value)}
+							label="Surat Keterangan"
+							type="url"
+							placeholder="drive.google.com"
 						/>
-						<Gap height={30} />
+						<Gap height={20} />
 
 						<Button
 							title={loading ? <ClipLoader size={20} /> : 'Upload SK'}
@@ -92,6 +102,7 @@ const Dashboard = () => {
 			) : (
 				<Message className="mb-1 success">
 					Surat keterangan diterima mitra sudah diupload
+					<a href={data} target='_blank' rel='noreferrer'> Lihat File</a>
 				</Message>
 			)}
 		</div>

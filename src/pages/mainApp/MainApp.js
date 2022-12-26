@@ -40,6 +40,12 @@ const MainApp = () => {
 					</NavLink>
 					<NavLink
 						className={({ isActive }) => (isActive ? 'link active' : 'link')}
+						to="laporan-akhir"
+					>
+						Upload Laporan Akhir
+					</NavLink>
+					<NavLink
+						className={({ isActive }) => (isActive ? 'link active' : 'link')}
 						to="profil"
 					>
 						Profil

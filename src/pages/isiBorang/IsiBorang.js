@@ -7,18 +7,20 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 const IsiBorang = () => {
+	const mhsInfo = JSON.parse(localStorage.getItem('mhsInfo'));
 	const [cpmks, setCpmks] = useState('');
 	const [subject, setSubject] = useState('');
 	const [loading, setLoading] = useState(false);
 	const [borangs, setBorangs] = useState('');
-	const mhsInfo = JSON.parse(localStorage.getItem('mhsInfo'));
 
 	useEffect(() => {
+
 		const config = {
 			headers: {
 				'Content-type': 'application/json',
 			},
 		};
+
 		const fetchCpmk = async () => {
 			const { data } = await axios.get(
 				`http://localhost:8910/api/admins/getAll/cpmks`,
@@ -27,7 +29,9 @@ const IsiBorang = () => {
 			console.log('cpmks', data.data);
 			setCpmks(data.data);
 		};
+
 		fetchCpmk();
+		
 		const fetchBorang = async () => {
 			const { data } = await axios.get(
 				`http://localhost:8910/api/students/student-borangs/${mhsInfo?._id}`,
@@ -36,7 +40,9 @@ const IsiBorang = () => {
 			console.log('borang', data.data.idBorangs);
 			setBorangs(data.data.idBorangs);
 		};
+
 		fetchBorang();
+
 	}, [mhsInfo?._id]);
 
 	const submitHandler = async (e) => {
@@ -146,7 +152,8 @@ const IsiBorang = () => {
 							<tr>
 								<th style={{ width: '3rem' }}>No</th>
 								<th style={{ width: '' }}>Nama</th>
-								<th style={{ width: '8rem' }}>Status</th>
+								<th style={{ width: '8rem' }}>Status Dosen</th>
+								<th style={{ width: '8rem' }}>Status Kajur</th>
 								<th style={{ width: '5rem' }}>Aksi</th>
 							</tr>
 						</thead>
@@ -156,11 +163,12 @@ const IsiBorang = () => {
 									<td colSpan={3}>Data kosong</td>
 								</tr>
 							) : (
-								borangs?.map(({ _id, subject, status }) => (
+								borangs?.map(({ _id, statusDosen, statusKajur, subject }) => (
 									<tr key={_id}>
 										<td>{i++}</td>
 										<td>{subject}</td>
-										<td>{status}</td>
+										<td>{statusDosen}</td>
+										<td>{statusKajur}</td>
 										<td>
 											<Link
 												key={_id}

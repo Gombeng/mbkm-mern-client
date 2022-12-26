@@ -13,7 +13,7 @@ import {
 	Profil,
 	NotFound,
 	Detail,
-	PilihCpmk,
+	PilihCpmk,UploadLaporanAkhir
 } from '../pages/Pages';
 
 const IsiBorang = React.lazy(() => import('../pages/isiBorang/IsiBorang'));
@@ -42,6 +42,7 @@ const Routes = () => {
 						element={<PilihCpmk />}
 					/>
 					<Route exact path="logsheet" element={<Logsheet />} />
+					<Route exact path="laporan-akhir" element={<UploadLaporanAkhir />} />
 					<Route exact path="profil" element={<Profil />} />
 					<Route exact path="*" element={<NotFound />} />
 				</Route>

@@ -1,8 +1,15 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { Helmet } from 'react-helmet';
-import { Button, Gap, Input, Message } from '../../components/Components';
+import {
+	Button,
+	Gap,
+	Input,
+	Message,
+	Table,
+} from '../../components/Components';
 import ClipLoader from 'react-spinners/ClipLoader';
+import { Link } from 'react-router-dom';
 
 const Logsheet = () => {
 	const mhsInfo = JSON.parse(localStorage.getItem('mhsInfo'));
@@ -10,103 +17,106 @@ const Logsheet = () => {
 	const [message, setMessage] = useState('');
 	const [error, setError] = useState(false);
 	const [loading, setLoading] = useState(false);
+	const [listLogsheet, setListLogsheet] = useState([]);
 
-	const handleSubmit = useCallback(
-		async (e) => {
-			try {
-				const config = {
-					headers: {
-						'Content-type': 'application/json',
-					},
-				};
-
-				setLoading(true);
-
-				const { data } = await axios.post(
-					`http://localhost:8910/api/students/upload-logsheet/${mhsInfo?._id}`,
-					{ logsheet },
-					config
-				);
-
-				if (data) {
-					console.log(data.logsheet);
-					setLoading(false);
-
-					// Save current timestamp to localstorage
-					localStorage.setItem(
-						'submitted-date',
-						JSON.stringify(new Date().getTime())
-					);
-
-					setMessage('Logsheet berhasil diupload, Upload lagi besok!');
-				}
-			} catch (error) {
-				setLoading(false);
-				console.log(error.response);
-				setError(error.response.data.message);
-			}
+	const config = {
+		headers: {
+			'Content-type': 'application/json',
 		},
-		[logsheet, mhsInfo?._id]
-	);
+	};
+
+	const handleSubmit = async () => {
+		try {
+			setLoading(true);
+
+			const { data } = await axios.post(
+				`http://localhost:8910/api/students/upload-logsheet/${mhsInfo?._id}`,
+				{ logsheet },
+				config
+			);
+
+			if (data) {
+				console.log(data.logsheet);
+				setLoading(false);
+				setMessage('Logsheet berhasil diupload, Upload lagi besok!');
+			}
+			window.alert('Logsheet berhasil diupload, Upload lagi besok!');
+		} catch (error) {
+			setLoading(false);
+			console.log(error.response);
+			setError(error.response.data.message);
+		}
+	};
 
 	useEffect(() => {
-		const submittedDate = localStorage.getItem('submitted-date');
-		const timestamp = new Date().getTime(); // Unix timestamp
-		const timeDiff = Math.abs(submittedDate - timestamp); // Calculate difference between current timestamp and saved timestamp
-		const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); // Get day from timestamp
+		const fetchLogsheet = async () => {
+			const { data } = await axios.get(
+				`http://localhost:8910/api/students/${mhsInfo?._id}`,
+				config
+			);
 
-		if (!submittedDate) {
-			// Submit your form here because this is the first time or there is nothing in localstorage
-			handleSubmit();
-		}
+			setListLogsheet(data.data.logsheet);
+		};
 
-		if (submittedDate && diffDays < 1) {
-			setMessage('Logsheet berhasil diupload, Upload lagi besok!');
-		}
-	}, [handleSubmit]);
+		fetchLogsheet();
+	}, []);
 
+	let i = 1;
 	return (
 		<div>
 			<Helmet>
 				<title>Logsheet | Lapor MBKM</title>
 			</Helmet>
 
-			<div>
-				<h3 className="mb-1">Silahkan Upload Logsheet harian</h3>
+			{message && <Message className="mb-1 success">{message}</Message>}
+			<form onSubmit={() => handleSubmit()} className='mb-1'>
+				<p className="mb-1">
+					Silahkan upload logsheet ke Google drive dan input linknya disini
+				</p>
 
-				<hr className="mb-1" />
+				<div>
+					<Input
+						className="b-1 p-1"
+						value={logsheet}
+						onChange={(e) => setLogsheet(e.target.value)}
+						label="Logsheet"
+						type="url"
+						placeholder="drive.google.com"
+					/>
+					<Gap height={20} />
 
-				{message ? (
-					<Message className="mb-1 success">{message}</Message>
-				) : (
-					<form onSubmit={handleSubmit}>
-						{error && <Message className="mb-1 error">{error}</Message>}
+					<Button
+						title={loading ? <ClipLoader size={20} /> : 'Upload'}
+						className="button mr-1"
+						type="submit"
+					/>
+				</div>
+			</form>
 
-						<p className="mb-1">
-							Silahkan upload logsheet ke Google drive dan input linknya disini
-						</p>
+			<h4 className="mb-1">Tabel Logsheet / Logbook harian yang sudah di upload</h4>
 
-						<div>
-							<Input
-								className="b-1 p-1"
-								value={logsheet}
-								onChange={(e) => setLogsheet(e.target.value)}
-								label="Logsheet"
-								type="url"
-								placeholder="drive.google.com"
-							/>
-							<Gap height={20} />
-
-							<Button
-								title={loading ? <ClipLoader size={20} /> : 'Upload'}
-								className="button mr-1"
-								type="submit"
-								// disabled={disabled}
-							/>
-						</div>
-					</form>
-				)}
-			</div>
+			<Table className="mb-1">
+				<thead>
+					<tr>
+						<th style={{ width: '3rem' }}>No</th>
+						<th style={{ width: '' }}>Logsheet</th>
+					</tr>
+				</thead>
+				<tbody>
+					{!listLogsheet?.length ? (
+						<tr>
+							<td colSpan={2}>Data kosong</td>
+						</tr>
+					) : (
+						listLogsheet?.map((data, j) => (
+							<tr key={j}>
+								<td>{i++}</td>
+								<td><a href={data} target="_blank" rel='noreferrer'>{data}</a></td>
+							</tr>
+						))
+					)}
+				</tbody>
+			</Table>
 		</div>
 	);
 };
