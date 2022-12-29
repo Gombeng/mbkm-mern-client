@@ -84,7 +84,7 @@ const Dashboard = () => {
 
 						<Input
 							className="b-1 p-1"
-							value={skAcc}
+							value={!skAcc ? "" : skAcc}
 							onChange={(e) => setSkAcc(e.target.value)}
 							label="Surat Keterangan"
 							type="url"
